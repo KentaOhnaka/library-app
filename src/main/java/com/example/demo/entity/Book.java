@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.sql.Types;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -8,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import org.hibernate.annotations.JdbcTypeCode;
 
 import lombok.Data;
 
@@ -27,8 +30,11 @@ public class Book {
 	@JoinColumn(name="AUTHOR_CODE", referencedColumnName="AUTHOR_CODE", insertable = false, updatable = false)
 	private Author author;
 	
-	@Column(name="AUTHOR_CODE")
-	private String authorCode;
+    @Column(name = "AUTHOR_CODE", columnDefinition = "char(5)")
+    @JdbcTypeCode(Types.CHAR) // ★★★ これが真の解決策！ ★★★
+    private String authorCode;
+	
+	
 	
 	@Column(name="PUBLISH_DATE")
 	private LocalDate publishDate;

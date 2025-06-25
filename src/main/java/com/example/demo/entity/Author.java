@@ -1,9 +1,13 @@
 package com.example.demo.entity;
 
+import java.sql.Types;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import org.hibernate.annotations.JdbcTypeCode;
 
 import lombok.Data;
 
@@ -14,7 +18,8 @@ import lombok.Data;
 public class Author {
 
 		@Id
-		@Column(name="AUTHOR_CODE")
+	    @Column(name = "AUTHOR_CODE", columnDefinition = "char(5)")
+		@JdbcTypeCode(Types.CHAR) // ★★★ これが真の解決策！ ★★★
 		private String authorCode;
 		
 		@Column(name="AUTHOR_NAME")
