@@ -12,5 +12,6 @@ public class BookSearchResultDto {
     private String bookName;
     private String authorName; // 著者名も表示したいので追加
     private String publishCompany;
+    private String authorCode;
 
 }

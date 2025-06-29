@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+	<header class="page-header" th:fragment="pageHeader">
+	      <div class="header-logo">
+	          <a th:href="@{/search}">図書館システム</a> </div>
+	      <nav class="header-nav">
+	          <ul>
+	              <li><a th:href="@{/guide}">利用ガイド</a></li>
+	              <li><a th:href="@{/search}">簡単検索</a></li>
+	              <li><a th:href="@{/search/detail}">詳細検索</a></li>
+	              <li><a th:href="@{/reservations}">予約一覧</a></li>
+	          </ul>
+	      </nav>
+	  </header>
+
+</body>
+</html>

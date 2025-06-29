@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>簡単書籍検索</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>簡単検索</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-    <h1>簡単書籍検索</h1>
+	<div th:replace="~{fragments/header :: pageHeader}"></div>
+    <h1>簡単検索</h1>
 
     <div class="search-form">
         <form th:action="@{/search/result}" method="get">
@@ -15,33 +14,43 @@
             <button type="submit">検索</button>
         </form>
     </div>
+    <hr>
 
-    <div th:if="${books}">
-        <div th:unless="${#lists.isEmpty(books)}">
-            <h2>検索結果</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ISBN</th>
-                        <th>書籍名</th>
-                        <th>著者名</th>
-                        <th>出版社</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="book : ${books}">
-                        <td th:text="${book.isbn}">978-4-7981-5757-9</td>
-                        <td th:text="${book.bookName}">Spring徹底入門</td>
-                        <td th:text="${book.authorName}">株式会社NTTデータ</td>
-                        <td th:text="${book.publishCompany}">翔泳社</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div th:if="${#lists.isEmpty(books) and keyword != ''}" class="no-results">
-            <p th:text="|「${keyword}」に一致する書籍は見つかりませんでした。|"></p>
+    <div th:if="${page}">
+        <table th:if="${page.hasContent()}">
+            <thead>
+                <tr><th>書籍名</th><th>著者名</th><th>出版社</th></tr>
+            </thead>
+            <tbody>
+                <tr th:each="book : ${page.content}">
+					<td>
+					    <a th:href="@{/books/{isbn}(isbn=${book.isbn})}" th:text="${book.bookName}">こころ</a>
+					</td>
+					<td>
+					    <a th:href="@{/author/{code}(code=${book.authorCode})}" th:text="${book.authorName}">こころ</a>
+					</td>
+                    <td th:text="${book.publishCompany}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:unless="${page.hasContent()}"><p>該当する書籍は見つかりませんでした。</p></div>
+        
+        <div class="pagination" th:if="${page.totalPages > 1}">
+            <nav><ul class="pagination-list">
+                <li th:classappend="${page.first} ? 'disabled'">
+                    <span th:if="${page.first}">前へ</span>
+                    <a th:unless="${page.first}" th:href="@{/search/result(keyword=${keyword}, page=${page.number - 1})}">前へ</a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${i == page.number} ? 'active'">
+                    <span th:if="${i == page.number}" th:text="${i + 1}"></span>
+                    <a th:unless="${i == page.number}" th:href="@{/search/result(keyword=${keyword}, page=${i})}" th:text="${i + 1}"></a>
+                </li>
+                <li th:classappend="${page.last} ? 'disabled'">
+                    <span th:if="${page.last}">次へ</span>
+                    <a th:unless="${page.last}" th:href="@{/search/result(keyword=${keyword}, page=${page.number + 1})}">次へ</a>
+                </li>
+            </ul></nav>
         </div>
     </div>
-
 </body>
 </html>

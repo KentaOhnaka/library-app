@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <div th:fragment="resultTable (paginationUrl, searchParams)">
+    
+        <div th:if="${page}">
+            </div>
+
+        <div class="pagination" th:if="${page.totalPages > 1}">
+            <nav>
+                <ul class="pagination-list">
+                    <li th:classappend="${page.first} ? 'disabled'">
+                        <span th:if="${page.first}">前へ</span>
+                        <a th:unless="${page.first}" th:href="@{${paginationUrl}(__${searchParams}__, page=${page.number - 1})}">前へ</a>
+                    </li>
+
+                    <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                        th:classappend="${i == page.number} ? 'active'">
+                        <span th:if="${i == page.number}" th:text="${i + 1}">1</span>
+                         <a th:unless="${i == page.number}" th:href="@{${paginationUrl}(__${searchParams}__, page=${i})}" th:text="${i + 1}">1</a>
+                    </li>
+
+                    <li th:classappend="${page.last} ? 'disabled'">
+                        <span th:if="${page.last}">次へ</span>
+                         <a th:unless="${page.last}" th:href="@{${paginationUrl}(__${searchParams}__, page=${page.number + 1})}">次へ</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+</body>
+</html>
