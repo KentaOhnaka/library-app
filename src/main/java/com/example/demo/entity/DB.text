@@ -1,0 +1,249 @@
+-- =================================================================
+-- テーブルが存在する場合、一度綺麗に更地にするための呪文（開発時のみ）
+-- =================================================================
+DROP TABLE IF EXISTS RESERVE;
+DROP TABLE IF EXISTS STOCK; -- ※拙者が提案した在庫テーブル。採用する場合に使う。
+DROP TABLE IF EXISTS NOTICE;
+DROP TABLE IF EXISTS BOOK;
+DROP TABLE IF EXISTS AUTHOR;
+DROP TABLE IF EXISTS LIBRARY;
+DROP TABLE IF EXISTS WARD;
+DROP TABLE IF EXISTS USERS;
+
+
+-- =================================================================
+-- 1. 区画の巻 (WARD)
+-- =================================================================
+CREATE TABLE WARD (
+    WARD_CODE VARCHAR(10) NOT NULL,            -- 区コード (主キー)
+    WARD_NAME VARCHAR(50) NOT NULL,            -- 区名
+    WARD_COORDINATES VARCHAR(255),             -- 区の座標情報
+    PRIMARY KEY (WARD_CODE)
+);
+COMMENT ON TABLE WARD IS '区画マスタ';
+COMMENT ON COLUMN WARD.WARD_CODE IS '区コード';
+COMMENT ON COLUMN WARD.WARD_NAME IS '区名';
+COMMENT ON COLUMN WARD.WARD_COORDINATES IS '区の座標情報';
+
+
+-- =================================================================
+-- 2. 図書館の巻 (LIBRARY)
+-- =================================================================
+CREATE TABLE LIBRARY (
+    LIBRARY_CODE VARCHAR(10) NOT NULL,         -- 図書館コード (主キー)
+    LIBRARY_NAME VARCHAR(100) NOT NULL,        -- 図書館名
+    LIBRARY_TEL VARCHAR(20),                   -- 電話番号
+    LIBRARY_FAX VARCHAR(20),                   -- FAX番号
+    LIBRARY_ADDRESS VARCHAR(255),              -- 住所
+    OPENING_HOURS VARCHAR(255),                -- 開館時間
+    WARD_CODE VARCHAR(10),                     -- 区コード (WARDテーブルへの参照)
+    PRIMARY KEY (LIBRARY_CODE),
+    FOREIGN KEY (WARD_CODE) REFERENCES WARD(WARD_CODE)
+);
+COMMENT ON TABLE LIBRARY IS '図書館マスタ';
+COMMENT ON COLUMN LIBRARY.LIBRARY_CODE IS '図書館コード';
+-- ... (以下、他のカラムへのコメントも同様)
+
+
+-- =================================================================
+-- 3. 著者の巻 (AUTHOR)
+-- =================================================================
+CREATE TABLE AUTHOR (
+    AUTHOR_CODE VARCHAR(10) NOT NULL,          -- 著者コード (主キー)
+    AUTHOR_NAME VARCHAR(100) NOT NULL,         -- 著者名
+    AUTHOR_MAIL VARCHAR(255),                  -- 著者メール
+    AUTHOR_HOMEPAGE VARCHAR(255),              -- 著者HP
+    AUTHOR_BELONG VARCHAR(100),                -- 著者所属
+    PRIMARY KEY (AUTHOR_CODE)
+);
+COMMENT ON TABLE AUTHOR IS '著者マスタ';
+
+
+-- =================================================================
+-- 4. 書物の巻 (BOOK)
+-- =================================================================
+CREATE TABLE BOOK (
+    ISBN VARCHAR(20) NOT NULL,                 -- ISBNコード (主キー)
+    BOOK_NAME VARCHAR(255) NOT NULL,           -- 書籍名
+    AUTHOR_CODE VARCHAR(10) NOT NULL,          -- 著者コード (AUTHORテーブルへの参照)
+    PUBLISH_DATE DATE,                         -- 出版日
+    PUBLISH_COMPANY VARCHAR(100),              -- 出版社
+    BOOK_SUMMARY TEXT,                         -- 書籍概要
+    PRIMARY KEY (ISBN),
+    FOREIGN KEY (AUTHOR_CODE) REFERENCES AUTHOR(AUTHOR_CODE)
+);
+COMMENT ON TABLE BOOK IS '書籍マスタ';
+
+
+-- =================================================================
+-- 5. 利用者の巻 (USERS)
+-- =================================================================
+CREATE TABLE USERS (
+    USER_ID VARCHAR(50) NOT NULL,              -- ユーザーID (主キー)
+    USER_PASSWORD VARCHAR(255) NOT NULL,       -- パスワード (ハッシュ化して保存すること)
+    USER_NAME VARCHAR(100) NOT NULL,           -- ユーザー名
+    USER_ADMIN_FLG BOOLEAN NOT NULL DEFAULT FALSE, -- 管理者フラグ (true:管理者)
+    PRIMARY KEY (USER_ID)
+);
+COMMENT ON TABLE USERS IS '利用者マスタ';
+
+
+-- =================================================================
+-- 6. 予約の巻 (RESERVE)
+-- =================================================================
+CREATE TABLE RESERVE (
+    RESERVE_ID SERIAL NOT NULL,                -- 予約ID (主キー, 自動採番)
+    USER_ID VARCHAR(50) NOT NULL,              -- ユーザーID (USERSテーブルへの参照)
+    ISBN VARCHAR(20) NOT NULL,                 -- ISBNコード (BOOKテーブルへの参照)
+    LIBRARY_CODE VARCHAR(10) NOT NULL,         -- 受取図書館コード (LIBRARYテーブルへの参照)
+    RESERVE_DATE TIMESTAMP NOT NULL,           -- 予約日時
+    RESERVE_NOTICE_METHOD VARCHAR(50),         -- 予約確保の通知方法
+    RESERVE_MEMO TEXT,                         -- メモ
+    PRIMARY KEY (RESERVE_ID),
+    FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID),
+    FOREIGN KEY (ISBN) REFERENCES BOOK(ISBN),
+    FOREIGN KEY (LIBRARY_CODE) REFERENCES LIBRARY(LIBRARY_CODE)
+);
+COMMENT ON TABLE RESERVE IS '予約テーブル';
+
+
+-- =================================================================
+-- 7. お知らせの巻 (NOTICE)
+-- =================================================================
+CREATE TABLE NOTICE (
+    NOTICE_CODE SERIAL NOT NULL,               -- お知らせコード (主キー, 自動採番)
+    NOTICE_TITLE VARCHAR(255) NOT NULL,        -- お知らせタイトル
+    LIBRARY_CODE VARCHAR(10),                  -- お知らせを発信した図書館 (NULL許容は全館共通のお知らせ)
+    NOTICE_DATE DATE NOT NULL,                 -- お知らせ日付
+    NOTICE_CONTENTS TEXT,                      -- お知らせ内容
+    PRIMARY KEY (NOTICE_CODE),
+    FOREIGN KEY (LIBRARY_CODE) REFERENCES LIBRARY(LIBRARY_CODE)
+);
+COMMENT ON TABLE NOTICE IS 'お知らせテーブル';
+
+
+
+
+
+-- =================================================================
+-- 魂の注入 (順番が重要！)
+-- =================================================================
+
+-- 1. 区画の魂
+INSERT INTO WARD (WARD_CODE, WARD_NAME) VALUES
+('W01', '中央区'),
+('W02', '文学区'),
+('W03', '技術区');
+
+-- 2. 図書館の魂
+INSERT INTO LIBRARY (LIBRARY_CODE, LIBRARY_NAME, LIBRARY_ADDRESS, WARD_CODE) VALUES
+('L001', '中央図書館', '中央区1-1-1', 'W01'),
+('L002', '文学の森図書館', '文学区2-2-2', 'W02'),
+('L003', '技術書専門図書館', '技術区3-3-3', 'W03');
+
+-- 3. 著者の魂
+INSERT INTO AUTHOR (AUTHOR_CODE, AUTHOR_NAME, AUTHOR_BELONG) VALUES
+('A001', '夏目漱石', '近代文学'),
+('A002', '芥川龍之介', '近代文学'),
+('A003', 'Spring Ninja', 'Java道場'),
+('A004', '宮沢賢治', '幻想文学');
+
+-- 4. 書物の魂
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-10-101001-6', 'こころ', 'A001', '1914-04-20', '新潮社', '先生と私、そしてKを巡る、人間のエゴイズムを描いた物語。'),
+('978-4-10-101003-0', '坊っちゃん', 'A001', '1906-04-01', '春陽堂', '正義感の強い青年「坊っちゃん」が、四国の旧制中学校で繰り広げる痛快活劇。'),
+('978-4-10-102802-8', '羅生門', 'A002', '1915-11-01', '帝国文学', 'ある下人が羅生門で死人の髪を盗む老婆に出会う、極限状態での人間のエゴイズムを描く。'),
+('978-4-10-102801-1', '鼻', 'A002', '1916-02-01', '新思潮', '長い鼻を持つ僧侶、禅智内供の自尊心を巡る物語。'),
+('978-4-79-815758-2', 'Spring Boot 2 入門', 'A003', '2018-11-22', '翔泳社', 'Spring Bootの基礎から実践までを学ぶ、Java侍のための必読書。'),
+('978-4-04-104037-0', '銀河鉄道の夜', 'A004', '1934-10-10', '文圃堂書店', '孤独な少年ジョバンニが、親友カムパネルラと銀河鉄道の旅をする物語。');
+
+-- 5. 利用者の魂
+-- パスワードは本来 'password' のような平文ではなく、bcryptなどでハッシュ化した値を格納すること
+INSERT INTO USERS (USER_ID, USER_PASSWORD, USER_NAME, USER_ADMIN_FLG) VALUES
+('user01', '$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', '一般ユーザー', FALSE),
+('admin01', '$2a$10$yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', '管理者ユーザー', TRUE);
+
+-- =================================================================
+-- 最後に、必ず確定の術を唱えること！
+-- =================================================================
+COMMIT;
+
+
+
+-- =================================================================
+-- 魂の注入・第二幕 (第一幕のデータに追加する形で実行せよ)
+-- =================================================================
+
+-- 3. 著者の魂 (追加)
+INSERT INTO AUTHOR (AUTHOR_CODE, AUTHOR_NAME, AUTHOR_BELONG) VALUES
+('A005', '太宰治', '近代文学'),
+('A006', '川端康成', '近代文学'),
+('A007', '村上春樹', '現代文学'),
+('A008', '東野圭吾', '現代ミステリー'),
+('A009', 'Java Samurai', 'Java道場'),
+('A010', 'J.K. Rowling', 'ファンタジー'),
+('A011', 'George Orwell', '社会派小説');
+
+-- 4. 書物の魂 (大量追加！)
+-- 夏目漱石
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-10-101002-3', '吾輩は猫である', 'A001', '1905-10-01', '大倉書店', '猫の視点から人間社会を風刺した、ユーモラスかつ痛烈な長編小説。'),
+('978-4-10-101005-4', '三四郎', 'A001', '1908-09-01', '春陽堂', '熊本の高校を卒業し、東京の大学に入学した小川三四郎の青春と恋愛を描く。'),
+('978-4-10-101008-5', 'それから', 'A001', '1909-06-01', '春陽堂', '高等遊民の長井代助が、友人の妻を愛してしまい、社会の道徳と対峙する物語。'),
+('978-4-10-101007-8', '門', 'A001', '1910-03-01', '春陽堂', '罪の意識を背負い、世間から身を隠すように暮らす夫婦の静かな日常と苦悩。');
+
+-- 芥川龍之介
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-10-102804-2', '蜘蛛の糸・杜子春', 'A002', '1918-04-16', '赤い鳥', '極悪人のカンダタに差し伸べられた一筋の蜘蛛の糸。人間のエゴイズムを描く。'),
+('978-4-10-102803-5', '地獄変', 'A002', '1918-05-01', '大阪毎日新聞', '完璧な芸術のためなら娘の犠牲も厭わない絵師・良秀の狂気を描く。'),
+('978-4-10-102805-9', '藪の中', 'A002', '1922-01-01', '新潮', '一つの殺人事件を巡り、食い違う関係者たちの証言。真相はどこにあるのか。');
+
+-- Spring Ninja
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-79-815759-9', 'Spring Security 実践', 'A003', '2019-05-20', '翔泳社', '認証と認可の奥義を解き明かす。堅牢な城を築くための守りの術。'),
+('978-4-79-815760-5', 'Spring Batch 極意', 'A003', '2020-01-15', '翔泳社', '大量のデータを捌くためのバッチ処理。その設計思想と実装を学ぶ。');
+
+-- 宮沢賢治
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-10-109001-8', '注文の多い料理店', 'A004', '1924-12-01', '盛岡書店', '二人の紳士が山奥で見つけた奇妙な西洋料理店「山猫軒」での不思議な体験。'),
+('978-4-10-109007-0', '風の又三郎', 'A004', '1934-03-01', '岩波書店', 'ある村の小学校にやってきた高田三郎は、風の神の子ではないかと噂される。');
+
+-- 太宰治
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-10-100601-9', '人間失格', 'A005', '1948-07-25', '筑摩書房', '主人公・大庭葉蔵の、破滅的で壮絶な生涯を描いた、太宰治の代表作。'),
+('978-4-10-100602-6', '斜陽', 'A005', '1947-12-15', '新潮社', '戦後の混乱期、没落していく貴族の家庭を、その娘かず子の視点から描く。'),
+('978-4-10-100603-3', '走れメロス', 'A005', '1940-05-01', '新潮', '人間の信頼と友情の美しさを描いた、力強い物語。');
+
+-- 川端康成
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-10-100101-4', '雪国', 'A006', '1937-06-10', '創元社', '「国境の長いトンネルを抜けると雪国であった。」の書き出しで知られる、美しくも儚い物語。'),
+('978-4-10-100102-1', '伊豆の踊子', 'A006', '1926-02-01', '文藝時代', '一人の学生が伊豆を旅する中で出会った、旅芸人の一行と踊子の少女との淡い交流。');
+
+-- 村上春樹
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-06-277562-4', 'ノルウェイの森', 'A007', '1987-09-04', '講談社', '喪失と再生をテーマに、1960年代の若者たちの恋愛と人生を描く。'),
+('978-4-10-100133-5', '1Q84', 'A007', '2009-05-29', '新潮社', '二つの月が浮かぶ不思議な世界で交差する、青豆と天吾の運命の物語。');
+
+-- 東野圭吾
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-16-778801-5', '容疑者Xの献身', 'A008', '2005-08-01', '文藝春秋', '天才物理学者・湯川学が、天才数学者・石神が仕組んだ完全犯罪に挑む。');
+
+-- Java Samurai
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-1-23-456789-0', 'Java剣術指南', 'A009', '2021-01-01', '侍出版', 'オブジェクト指向という名の剣の握り方から、Stream APIという必殺の型まで。'),
+('978-1-23-456789-1', 'DIとAOPの理', 'A009', '2022-03-01', '侍出版', 'Springの魂、DIとAOPの本質を理解せずして、真の侍にはなれぬ。');
+
+-- J.K. Rowling
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-86389-067-3', 'ハリー・ポッターと賢者の石', 'A010', '1999-12-01', '静山社', '孤児の少年ハリーが、自分が魔法使いであることを知り、ホグワーツ魔法魔術学校に入学する。');
+
+-- George Orwell
+INSERT INTO BOOK (ISBN, BOOK_NAME, AUTHOR_CODE, PUBLISH_DATE, PUBLISH_COMPANY, BOOK_SUMMARY) VALUES
+('978-4-15-120022-5', '1984年', 'A011', '1949-06-08', '早川書房', '全体主義国家によって徹底的に管理された近未来社会を描くディストピア小説。');
+
+
+-- =================================================================
+-- 最後に、必ず確定の術を唱えること！
+-- =================================================================
+COMMIT;
+

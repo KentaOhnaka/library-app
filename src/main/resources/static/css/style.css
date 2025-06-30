@@ -1,0 +1,121 @@
+body {
+	font-family: sans-serif;
+	margin: 2em;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th,
+td {
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: left;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+.search-form {
+	margin-bottom: 2em;
+}
+
+.no-results {
+	color: #888;
+}
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	/* 中央寄せ */
+	margin-top: 2rem;
+}
+
+/* ulタグのスタイル */
+.pagination-list {
+	list-style: none;
+	/* リストの黒点を消す */
+	padding: 0;
+	margin: 0;
+	display: flex;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	overflow: hidden;
+	/* 角丸を効かせるため */
+}
+
+/* liタグのスタイル */
+.pagination-list li {
+	margin: 0;
+}
+
+/* リンク(a)と、非リンク(span)の共通スタイル */
+.pagination-list a,
+.pagination-list span {
+	display: block;
+	padding: 0.75rem 1rem;
+	color: #007bff;
+	text-decoration: none;
+	border-left: 1px solid #ddd;
+	background-color: #fff;
+	transition: background-color 0.2s;
+}
+
+.pagination-list li:first-child a,
+.pagination-list li:first-child span {
+	border-left: none;
+	/* 先頭の左枠線は消す */
+}
+
+/* マウスが乗った時のリンクのスタイル */
+.pagination-list a:hover {
+	background-color: #f4f4f4;
+}
+
+/* アクティブなページ(現在地)のスタイル */
+.pagination-list li.active span {
+	color: #fff;
+	background-color: #007bff;
+	border-color: #007bff;
+}
+
+/* 無効な(disabled)リンクのスタイル */
+.pagination-list li.disabled span {
+	color: #868e96;
+	background-color: #e9ecef;
+	pointer-events: none;
+	/* クリックイベントを無効化 */
+}
+.page-header {
+    background-color: #333;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between; /* 要素を両端に配置 */
+    align-items: center;
+}
+.header-logo a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.header-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+.header-nav li {
+    margin-left: 20px;
+}
+.header-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+}
+.header-nav a:hover {
+    text-decoration: underline;
+}

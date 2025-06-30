@@ -13,36 +13,30 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="BOOK")
+@Table(name = "BOOK")
 public class Book {
-	
+
 	@Id
-	@Column(name="ISBN")
+	@Column(name = "ISBN")
 	private String isbn;
-	
-	@Column(name="BOOK_NAME")
+
+	@Column(name = "BOOK_NAME")
 	private String bookName;
-	
+
 	@ManyToOne
-	@JoinColumn(name="AUTHOR_CODE", referencedColumnName="AUTHOR_CODE", insertable = false, updatable = false)
+	@JoinColumn(name = "AUTHOR_CODE", referencedColumnName = "AUTHOR_CODE", insertable = false, updatable = false)
 	private Author author;
-	
-	@Column(name="AUTHOR_CODE")
+
+	@Column(name = "AUTHOR_CODE")
 	private String authorCode;
-	
-	@Column(name="PUBLISH_DATE")
+
+	@Column(name = "PUBLISH_DATE")
 	private LocalDate publishDate;
-	
-	@Column(name="PUBLISH_COMPANY")
+
+	@Column(name = "PUBLISH_COMPANY")
 	private String publishCompany;
-	
-	@Column(name="BOOK_SUMMARY")
+
+	@Column(name = "BOOK_SUMMARY")
 	private String bookSummary;
-	
-	
-	
-	
-	
-	
 
 }

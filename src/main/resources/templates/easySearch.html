@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>簡単検索</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+	<div th:replace="~{fragments/header :: pageHeader}"></div>
+    <h1>簡単検索</h1>
+
+    <div class="search-form">
+        <form th:action="@{/search/result}" method="get">
+            <input type="text" name="keyword" size="50" th:value="${keyword}" placeholder="書籍名を入力してください">
+            <button type="submit">検索</button>
+        </form>
+    </div>
+    <hr>
+
+    <div th:if="${page}">
+        <table th:if="${page.hasContent()}">
+            <thead>
+                <tr><th>書籍名</th><th>著者名</th><th>出版社</th></tr>
+            </thead>
+            <tbody>
+                <tr th:each="book : ${page.content}">
+					<td>
+					    <a th:href="@{/books/{isbn}(isbn=${book.isbn})}" th:text="${book.bookName}">こころ</a>
+					</td>
+					<td>
+					    <a th:href="@{/author/{code}(code=${book.authorCode})}" th:text="${book.authorName}">こころ</a>
+					</td>
+                    <td th:text="${book.publishCompany}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:unless="${page.hasContent()}"><p>該当する書籍は見つかりませんでした。</p></div>
+        
+        <div class="pagination" th:if="${page.totalPages > 1}">
+            <nav><ul class="pagination-list">
+                <li th:classappend="${page.first} ? 'disabled'">
+                    <span th:if="${page.first}">前へ</span>
+                    <a th:unless="${page.first}" th:href="@{/search/result(keyword=${keyword}, page=${page.number - 1})}">前へ</a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${i == page.number} ? 'active'">
+                    <span th:if="${i == page.number}" th:text="${i + 1}"></span>
+                    <a th:unless="${i == page.number}" th:href="@{/search/result(keyword=${keyword}, page=${i})}" th:text="${i + 1}"></a>
+                </li>
+                <li th:classappend="${page.last} ? 'disabled'">
+                    <span th:if="${page.last}">次へ</span>
+                    <a th:unless="${page.last}" th:href="@{/search/result(keyword=${keyword}, page=${page.number + 1})}">次へ</a>
+                </li>
+            </ul></nav>
+        </div>
+    </div>
+</body>
+</html>
