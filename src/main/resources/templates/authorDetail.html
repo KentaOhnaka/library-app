@@ -1,34 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"></html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title title th:text="${author.authorName}"></title>
-<link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <title th:text="${author.authorName}">著者詳細</title>
+    <link rel="stylesheet" th:href="@{/css/application.css}">
 </head>
 <body>
-	<div th:replace="~{fragments/header :: pageHeader}"></div>
-	<h1 th:text="${author.authorName}">書籍名</h1>
-	
-	<hr>
-	<div>
-		<strong>著者名:</strong>
-		<span th:text="${author.authorName}"></span><br>
-		<strong>著者コード</strong>
-		<span th:text="${author.authorCode}"></span><br>
-		<strong>著者メール</strong>
-		<span th:text="${author.authorMail}"></span><br>
-		<strong>ホームページ</strong>
-		<span th:text="${author.authorHomepage}"></span><br>
-		<strong>所属</strong>
-		<span th:text="${author.authorBelong}"></span><br>
-		<hr>
+    <div th:replace="~{fragments/header :: pageHeader}"></div>
 
-		
-<!--		<a th:href="@{}">戻る-->
+    <main class="detail-container" th:object="${author}">
+        <div class="detail-header">
+            <h1 th:text="*{authorName}">著者名</h1>
+            <div class="detail-meta">
+                <span><strong>所属:</strong> <span th:text="*{authorBelong}">著者所属</span></span>
+                <span th:if="*{authorHomepage}">
+                    <strong>HP:</strong> 
+                    <a th:href="*{authorHomepage}" th:text="*{authorHomepage}" target="_blank"></a>
+                </span>
+            </div>
+        </div>
+        
+        <div class="detail-books-list" th:if="*{!books.isEmpty()}">
+            <h2>この著者の作品</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>書籍名</th>
+                        <th>出版社</th>
+                        <th>出版日</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="book : *{books}">
+                        <td>
+                            <a th:href="@{/books/{isbn}(isbn=${book.isbn})}" th:text="${book.bookName}"></a>
+                        </td>
+                        <td th:text="${book.publishCompany}"></td>
+                        <td th:text="${book.publishDate}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-	</div>
-	
-	
+        <a href="javascript:history.back()" class="btn btn-secondary">戻る</a>
+    </main>
 
 </body>
 </html>
