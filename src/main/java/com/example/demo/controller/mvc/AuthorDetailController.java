@@ -20,7 +20,7 @@ public class AuthorDetailController {
 	
 	@GetMapping("/{authorCode}")
 	public String showDetail (@PathVariable String authorCode, Model model) {
-		AuthorDetailDto dto=authorService.findByAuthorCode(authorCode);
+		AuthorDetailDto dto=authorService.findByAuthorWithBooks(authorCode);
 		model.addAttribute("author",dto);
 		return "authorDetail";
 	}

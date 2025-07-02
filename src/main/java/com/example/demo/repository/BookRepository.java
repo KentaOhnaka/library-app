@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +15,5 @@ public interface BookRepository extends JpaRepository <Book,String>,JpaSpecifica
 //	@param bookName
 //	@return
 	Page<Book> findByBookNameContaining(String bookName,Pageable pageable);
+	List <Book> findByAuthorCode(String authorCode);
 }

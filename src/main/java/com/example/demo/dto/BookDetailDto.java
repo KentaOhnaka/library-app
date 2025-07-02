@@ -12,5 +12,6 @@ public class BookDetailDto {
 	private String publishCompany;
 	private LocalDate publishDate;
 	private String bookSummary;
+	private String authorCode;
 
 }

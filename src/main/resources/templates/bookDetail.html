@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${bookDetail.bookName}">書籍詳細</title>
-    <link rel="stylesheet" th:href="@{/css/application.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
     <div th:replace="~{fragments/header :: pageHeader}"></div>
@@ -12,9 +12,10 @@
         <div class="detail-header">
             <h1 th:text="*{bookName}">書籍名</h1>
             <div class="detail-meta">
+				<br>
                 <span>
                     <strong>著者:</strong> 
-                    <a th:href="@{/authors/{code}(code=*{authorCode})}" th:text="*{authorName}">著者名</a>
+                    <a th:href="@{/author/{code}(code=*{authorCode})}" th:text="*{authorName}">著者名</a>
                 </span>
                 <span><strong>出版社:</strong> <span th:text="*{publishCompany}">出版社名</span></span>
                 <span><strong>出版日:</strong> <span th:text="*{publishDate}">出版日</span></span>

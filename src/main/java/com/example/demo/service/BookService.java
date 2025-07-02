@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -141,8 +143,15 @@ public class BookService {
 		dto.setPublishCompany(book.getPublishCompany());
 		dto.setBookSummary(book.getBookSummary());
 		dto.setAuthorName(book.getAuthor().getAuthorName());
+		dto.setAuthorCode(book.getAuthor().getAuthorCode());
 //		if (book.getAuthor() != null)
 //			dto.setAuthorName(book.getAuthor().getAuthorName());
 		return dto;
+	}
+	
+	public List<BookSearchResultDto> findByAuthorCode(String authorCode){
+		List<Book> books =bookRepository.findByAuthorCode(authorCode);
+		return books.stream().map(this::convertToDto)
+				.collect(Collectors.toList());
 	}
 }
