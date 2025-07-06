@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<title>予約一覧</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+
+<body>
+	<div th:replace="~{fragments/header :: pageHeader}"></div>
+	<h1>あなたの予約一覧</h1>
+
+	<hr>
+
+	<div th:unless="${reservations.isEmpty()}">
+		<table>
+			<thead>
+				<tr>
+					<th>書籍名</th>
+					<th>著者名</th>
+					<th>受取図書館</th>
+					<th>予約日</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="r : ${reservations}">
+					<td th:text="${r.bookName}"></td>
+					<td th:text="${r.authorName}"></td>
+					<td th:text="${r.libraryName}"></td>
+					<td th:text="${#temporals.format(r.reserveDate,'yyyy-MM-dd HH:mm')}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div th:if="${reservations.isEmpty()}">
+		<p>現在予約中の書籍はありません。</p>
+	</div>
+
+</body>
+
+</html>

@@ -16,7 +16,7 @@
 			<ul>
 				<th:block sec:authorize="isAuthenticated()">
 					<li>
-						<span>ようこそ, <span sec:authentication="principal.username">User</span> 様</span>
+						<span>ようこそ, <span sec:authentication="principal.username"></span> 様</span>
 					</li>
 				</th:block>
 				<li><a th:href="@{/guide}">利用ガイド</a></li>
