@@ -1,35 +1,36 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"></html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title title th:text="${bookDetail.bookName}"></title>
-<link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <title th:text="${bookDetail.bookName}">書籍詳細</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-	<div th:replace="~{fragments/header :: pageHeader}"></div>
-	<h1 th:text="${bookDetail.bookName}">書籍名</h1>
-	
-	<hr>
-	<div>
-		<strong>書籍名:</strong>
-		<span th:text="${bookDetail.bookName}"></span><br>
-		<strong>著者</strong>
-		<span th:text="${bookDetail.authorName}"></span><br>
-		<strong>出版社</strong>
-		<span th:text="${bookDetail.publishCompany}"></span><br>
-		<strong>出版日時</strong>
-		<span th:text="${bookDetail.publishDate}"></span><br>
-		<strong>ISBN</strong>
-		<span th:text="${bookDetail.isbn}"></span><br>
-		<hr>
-		<strong>本の概要</strong>
-		<p th:text="${bookDetail.bookSummary}"></p>
-		
-<!--		<a th:href="@{}">戻る-->
+    <div th:replace="~{fragments/header :: pageHeader}"></div>
 
-	</div>
-	
-	
+    <main class="detail-container" th:object="${bookDetail}">
+        <div class="detail-header">
+            <h1 th:text="*{bookName}">書籍名</h1>
+            <div class="detail-meta">
+				<br>
+                <span>
+                    <strong>著者:</strong> 
+                    <a th:href="@{/author/{code}(code=*{authorCode})}" th:text="*{authorName}">著者名</a>
+                </span>
+                <span><strong>出版社:</strong> <span th:text="*{publishCompany}">出版社名</span></span>
+                <span><strong>出版日:</strong> <span th:text="*{publishDate}">出版日</span></span>
+            </div>
+        </div>
+        
+        <hr>
+
+        <div class="detail-summary">
+            <h2>概要</h2>
+            <p th:text="*{bookSummary}">ここに書籍の概要が表示されます。</p>
+        </div>
+
+        <a href="javascript:history.back()" class="btn btn-secondary">戻る</a>
+    </main>
 
 </body>
 </html>

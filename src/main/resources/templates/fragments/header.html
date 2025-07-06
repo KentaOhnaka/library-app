@@ -1,23 +1,42 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<head>
+	<title>Insert title here</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 	<header class="page-header" th:fragment="pageHeader">
-	      <div class="header-logo">
-	          <a th:href="@{/search}">図書館システム</a> </div>
-	      <nav class="header-nav">
-	          <ul>
-	              <li><a th:href="@{/guide}">利用ガイド</a></li>
-	              <li><a th:href="@{/search}">簡単検索</a></li>
-	              <li><a th:href="@{/search/detail}">詳細検索</a></li>
-	              <li><a th:href="@{/reservations}">予約一覧</a></li>
-	          </ul>
-	      </nav>
-	  </header>
+		<div class="header-logo">
+			<a th:href="@{/search}">図書館システム</a>
+		</div>
+		<nav class="header-nav">
+			<ul>
+				<th:block sec:authorize="isAuthenticated()">
+					<li>
+						<span>ようこそ, <span sec:authentication="principal.username">User</span> 様</span>
+					</li>
+				</th:block>
+				<li><a th:href="@{/guide}">利用ガイド</a></li>
+				<li><a th:href="@{/search}">簡単検索</a></li>
+				<li><a th:href="@{/search/detail}">詳細検索</a></li>
+				<li sec:authorize="isAuthenticated()">
+					<a th:href="@{/reservations}">予約一覧</a>
+				</li>
+				<li sec:authorize="isAuthenticated()">
+					<form th:action="@{/logout}" method="post">
+						<button type="submit" class="logout-button">ログアウト</button>
+					</form>
+				</li>
+				<li sec:authorize="isAnonymous()">
+					<a th:href="@{/login}">ログイン</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
 
 </body>
+
 </html>
