@@ -150,7 +150,7 @@ public class BookService {
 	}
 	
 	public List<BookSearchResultDto> findByAuthorCode(String authorCode){
-		List<Book> books =bookRepository.findByAuthorCode(authorCode);
+		List<Book> books =bookRepository.findByAuthor_AuthorCode(authorCode);
 		return books.stream().map(this::convertToDto)
 				.collect(Collectors.toList());
 	}

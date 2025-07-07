@@ -104,7 +104,7 @@ hr {
 }
 
 .form-group input {
-    width: 100%;
+    width: 95%;
     padding: 0.8rem;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -379,4 +379,58 @@ td a:hover {
 
 .btn-secondary:hover {
     background-color: #5a6268;
+}
+
+
+/* 予約フォーム全体のコンテナ */
+.reservation-form-container {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* フォームの各項目を囲むグループ */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+/* 入力欄のスタイル */
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* paddingを含めて幅100%にする */
+}
+
+/* ボタンのスタイル */
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
 }

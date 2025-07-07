@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,13 +23,12 @@ public class Book {
 
 	@Column(name = "BOOK_NAME")
 	private String bookName;
-
-	@ManyToOne
-	@JoinColumn(name = "AUTHOR_CODE", referencedColumnName = "AUTHOR_CODE", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "AUTHOR_CODE") // 封印を解き放ち、シンプルに！
 	private Author author;
 
-	@Column(name = "AUTHOR_CODE")
-	private String authorCode;
+//	@Column(name = "AUTHOR_CODE")
+//	private String authorCode;
 
 	@Column(name = "PUBLISH_DATE")
 	private LocalDate publishDate;

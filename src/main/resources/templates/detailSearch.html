@@ -7,16 +7,33 @@
 
 </head>
 
-<body>
-	<div th:replace="~{fragments/header :: pageHeader}"></div>
-	<h1>詳細検索</h1>
+<div th:replace="~{fragments/header :: pageHeader}"></div>
+<h1>詳細検索</h1>
 
-	<form th:action="@{/search/detail/result}" method="get" th:object="${detailSearchForm}">
-		<div><label>書籍名:</label><input type="text" th:field="*{bookName}"></div>
-		<div><label>著者名:</label><input type="text" th:field="*{authorName}"></div>
-		<div><label>出版社:</label><input type="text" th:field="*{publishCompany}"></div>
-		<div><button type="submit">この条件で検索</button></div>
-	</form>
+<body>
+	<div class="search-form">
+		<form th:action="@{/search/detail/result}" method="get" th:object="${detailSearchForm}">
+
+			<div class="form-group">
+				<label for="bookName">書籍名:</label>
+				<input type="text" id="bookName" th:field="*{bookName}" class="form-control">
+			</div>
+
+			<div class="form-group">
+				<label for="authorName">著者名:</label>
+				<input type="text" id="authorName" th:field="*{authorName}" class="form-control">
+			</div>
+
+			<div class="form-group">
+				<label for="publishCompany">出版社:</label>
+				<input type="text" id="publishCompany" th:field="*{publishCompany}" class="form-control">
+			</div>
+
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary">この条件で検索</button>
+			</div>
+		</form>
+	</div>
 	<hr>
 
 	<div th:if="${page}">

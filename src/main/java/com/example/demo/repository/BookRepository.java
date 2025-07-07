@@ -15,5 +15,6 @@ public interface BookRepository extends JpaRepository <Book,String>,JpaSpecifica
 //	@param bookName
 //	@return
 	Page<Book> findByBookNameContaining(String bookName,Pageable pageable);
-	List <Book> findByAuthorCode(String authorCode);
+//	List <Book> findByAuthorCode(String authorCode);
+	 List<Book> findByAuthor_AuthorCode(String authorCode);
 }

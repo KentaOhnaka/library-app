@@ -21,15 +21,24 @@
 					<th>著者名</th>
 					<th>受取図書館</th>
 					<th>予約日</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="r : ${reservations}">
-					<td th:text="${r.bookName}"></td>
-					<td th:text="${r.authorName}"></td>
+					<td>
+						<a th:href="@{/books/{isbn}(isbn=${r.isbn})}" th:text="${r.bookName}"></a>
+					</td>
+					<td>
+						<a th:href="@{/author/{code}(code=${r.authorCode})}" th:text="${r.authorName}"></a>
+					</td>
 					<td th:text="${r.libraryName}"></td>
 					<td th:text="${#temporals.format(r.reserveDate,'yyyy-MM-dd HH:mm')}"></td>
+					<td>
+						<a th:href="@{/reserveList/{id}(id=${r.reserveId})}">詳細へ</a>
+					</td>
 				</tr>
+
 			</tbody>
 		</table>
 	</div>

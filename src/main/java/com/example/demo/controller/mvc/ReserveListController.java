@@ -19,7 +19,7 @@ public class ReserveListController {
 	
 	private final ReserveService reserveService;
 	
-	@GetMapping("/reservations")
+	@GetMapping("/reservations/list")
 	public String showReservations (Model model,
 			Principal principal) {
 		

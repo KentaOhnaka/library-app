@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>予約詳細</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/header :: pageHeader}"></div>
+
+    <main class="main-container" th:object="${reserve}">
+        <h1>予約詳細 (予約番号: <span th:text="*{reserveId}">1</span>)</h1>
+        <hr>
+        
+        <h2>予約書籍</h2>
+        <p><strong>書籍名:</strong> <span th:text="*{bookName}"></span></p>
+        <p><strong>著者名:</strong> <span th:text="*{authorName}"></span></p>
+        
+        <h2>受取情報</h2>
+        <p><strong>受取館:</strong> <span th:text="*{libraryName}"></span></p>
+        <p><strong>受取館住所:</strong> <span th:text="*{libraryAddress}"></span></p>
+        
+        <h2>予約情報</h2>
+        <p><strong>予約日時:</strong> <span th:text="${#temporals.format(reserve.reserveDate, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+        <p><strong>メモ:</strong> <span th:text="*{reserveMemo != null ? reserveMemo : 'なし'}"></span></p>
+        
+        <hr>
+        <a th:href="@{/reservations/list}" class="btn btn-secondary">予約一覧へ戻る</a>
+    </main>
+</body>
+</html>

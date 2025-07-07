@@ -23,7 +23,7 @@
 				<li><a th:href="@{/search}">簡単検索</a></li>
 				<li><a th:href="@{/search/detail}">詳細検索</a></li>
 				<li sec:authorize="isAuthenticated()">
-					<a th:href="@{/reservations}">予約一覧</a>
+					<a th:href="@{/reservations/list}">予約一覧</a>
 				</li>
 				<li sec:authorize="isAuthenticated()">
 					<form th:action="@{/logout}" method="post">

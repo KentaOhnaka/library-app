@@ -5,15 +5,14 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
+public class ReserveDetailDto {
 
-public class ReservationDto {
+	private Integer reserveId;
 	private String bookName;
 	private String authorName;
 	private String libraryName;
+	private String libraryAddress; // 受取館の住所も表示しよう
 	private LocalDateTime reserveDate;
-	private Integer reserveId;
-	
-    private String isbn;         // 書籍のISBN
-    private String authorCode;   // 著者のコード
+	private String reserveMemo;
 
 }
